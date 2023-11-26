@@ -4,91 +4,107 @@
 const minutesLabel = document.getElementById("minutes");
 const secondsLabel = document.getElementById("seconds");
 const millisecondsLabel = document.getElementById("milliseconds");
-
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
-const pauseBtn = document.getElementById("pauseBtn");
-const resetBtn = document.getElementById("resetBtn");
-
+const controls = document.querySelector(".controls");
 const lapList = document.getElementById("lap-list");
 
-// Stopwatch variable/s
 let minutes = 0;
 let seconds = 0;
 let milliseconds = 0;
 let interval;
 
-// Function/s
-const formatTime = function (time) {
-	return time.toString().padStart(2, "0");
-};
+function initialize() {
+	minutes = 0;
+	seconds = 0;
+	milliseconds = 0;
+	displayTimer();
+}
 
-const displayTimer = function () {
+function formatTime(time) {
+	return time.toString().padStart(2, "0");
+}
+
+function displayTimer() {
 	millisecondsLabel.textContent = formatTime(milliseconds);
 	secondsLabel.textContent = formatTime(seconds);
 	minutesLabel.textContent = formatTime(minutes);
-};
+}
 
-const updateTimer = function () {
+function updateTimer() {
 	milliseconds++;
 	if (milliseconds === 100) {
 		milliseconds = 0;
 		seconds++;
+
 		if (seconds === 60) {
 			seconds = 0;
 			minutes++;
 		}
 	}
 	displayTimer();
-};
+}
 
-const addToLapList = function () {
+function addToLapList() {
 	const lapTime = `${formatTime(minutes)}:${formatTime(seconds)}:${formatTime(
 		milliseconds
 	)}`;
 
 	const listItem = document.createElement("li");
 	listItem.innerHTML = `
-    <span>Lap ${lapList.childElementCount + 1}:</span>${lapTime}
-    `;
+    <span>Lap ${lapList.childElementCount + 1}:</span> ${lapTime}
+  `;
 
 	lapList.appendChild(listItem);
-};
+}
 
-const startTimer = function () {
+function setButtonState(start, stop, pause) {
+	startBtn.disabled = start;
+	stopBtn.disabled = stop;
+	pauseBtn.disabled = pause;
+}
+
+function startTimer() {
 	interval = setInterval(updateTimer, 10);
-	startBtn.disabled = true;
-	stopBtn.disabled = false;
-};
+	setButtonState(true, false, false);
+}
 
-const stopTimer = function () {
+function stopTimer() {
 	clearInterval(interval);
 	addToLapList();
-	resetTimerData();
-	stopBtn.disabled = true;
-	startBtn.disabled = false;
-};
+	initialize();
+	setButtonState(false, true, true);
+}
 
-const pauseTimer = function () {
+function pauseTimer() {
 	clearInterval(interval);
-	startBtn.disabled = false;
-};
+	setButtonState(false, false, true);
+}
 
-const resetTimerData = function () {
-	minutes = 0;
-	seconds = 0;
-	milliseconds = 0;
-	displayTimer();
-};
-
-const resetTimer = function () {
+function resetTimer() {
 	clearInterval(interval);
-	resetTimerData();
-	startBtn.disabled = false;
-};
+	initialize();
+	setButtonState(false, true, true);
+}
 
-// Event listener/s
-startBtn.addEventListener("click", startTimer);
-stopBtn.addEventListener("click", stopTimer);
-pauseBtn.addEventListener("click", pauseTimer);
-resetBtn.addEventListener("click", resetTimer);
+controls.addEventListener("click", function (event) {
+	if (event.target.classList.contains("control-btn")) {
+		const buttonId = event.target.id;
+
+		switch (buttonId) {
+			case "startBtn":
+				startTimer();
+				break;
+
+			case "stopBtn":
+				stopTimer();
+				break;
+
+			case "pauseBtn":
+				pauseTimer();
+				break;
+
+			case "resetBtn":
+				resetTimer();
+				break;
+		}
+	}
+});
