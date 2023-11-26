@@ -1,6 +1,8 @@
-# Joke Teller
+# Stopwatch timer
 
-Listen to random jokes!
+A stopwatch timer web application.
+
+Live site url: 
 
 ## Table of contents
 
