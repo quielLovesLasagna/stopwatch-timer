@@ -2,7 +2,7 @@
 
 A stopwatch timer web application.
 
-Live site url: 
+Live site url: https://quiel-stopwatch-timer.netlify.app/
 
 ## Table of contents
 
