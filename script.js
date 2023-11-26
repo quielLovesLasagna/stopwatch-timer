@@ -1,6 +1,5 @@
 "use strict";
 
-// Element/s
 const minutesLabel = document.getElementById("minutes");
 const secondsLabel = document.getElementById("seconds");
 const millisecondsLabel = document.getElementById("milliseconds");
